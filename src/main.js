@@ -1,5 +1,5 @@
 import start from "./start";
-import flatpickrCss from "./flatpickr_css";
+import flatpickrCss from "./flatpickrcss";
 
 function findJoinBtn() {
 	// eslint-disable-next-line quotes
@@ -21,17 +21,23 @@ function createMeetofflinerBtn(joinBtn, btnsContainer) {
 	// actual joinBtn, not just the clickable part. Hence the parentNodes.
 	const joinBtnFull = joinBtn.parentNode.parentNode;
 	const meetofflinerBtn = joinBtnFull.cloneNode(true);
+	console.log(meetofflinerBtn);
 
 	meetofflinerBtn.childNodes[2].childNodes[0].innerHTML = "Meetoffliner";
-	btnsContainer.appendChild(meetofflinerBtn).addEventListener("click", () => {
+	btnsContainer.appendChild(meetofflinerBtn);
+
+	meetofflinerBtn.addEventListener("click", () => {
 		start(() => {
 			joinBtn.click();
 		});
 	});
-
+	meetofflinerBtn.setAttribute("id", "meetoffliner-btn");
 	meetofflinerBtn.removeAttribute("jsaction");
 	meetofflinerBtn.removeAttribute("jscontroller");
 	meetofflinerBtn.removeAttribute("jsname");
+	meetofflinerBtn.removeAttribute("tabindex");
+	meetofflinerBtn.removeAttribute("aria-disabled");
+	meetofflinerBtn.removeAttribute("jsshadow");
 }
 
 async function main() {
@@ -47,31 +53,30 @@ async function main() {
 	flatpickrStyle.setAttribute("id", "flatpickr");
 	document.head.appendChild(flatpickrStyle);
 
-	// Because we are dealing with an SPA, we need to wait until everyting has
-	// been loaded. This query is a good indicator of that.
-	const checkLoadedLoop = setInterval(() => {
-		// eslint-disable-next-line quotes
-		if (!document.querySelector(`body > div[aria-live="polite"]`)) {
+	const initLoop = setInterval(() => {
+		const joinBtn = findJoinBtn();
+		if (!joinBtn) {
 			return;
 		}
-		clearInterval(checkLoadedLoop);
 
-		// Find join button and create new meetoffliner start button.
-		const initLoop = setInterval(() => {
-			const joinBtn = findJoinBtn();
-			if (!joinBtn) {
-				return;
+		const btnsContainer = joinBtn.parentNode.parentNode.parentNode;
+		if (!btnsContainer) {
+			return;
+		}
+		clearInterval(initLoop);
+
+		// There have been issues where the button would not appear, therefore
+		// we now check whether is has.
+		const createLoop = setInterval(() => {
+			if (!joinBtn || !btnsContainer) {
+				clearInterval(createLoop);
 			}
-
-			const btnsContainer = joinBtn.parentNode.parentNode.parentNode;
-			if (!btnsContainer) {
-				return;
+			if (!document.getElementById("meetoffliner-btn")) {
+				createMeetofflinerBtn(joinBtn, btnsContainer);
 			}
+		}, 500);
 
-			createMeetofflinerBtn(joinBtn, btnsContainer);
-			clearInterval(initLoop);
-		}, 100);
-	});
+	}, 100);
 
 }
 
