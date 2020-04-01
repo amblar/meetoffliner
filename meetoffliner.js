@@ -155,6 +155,8 @@ async function displayTimerActiveLeaveDialog(msUntilLeave) {
 	}
 }
 
+let joinNowButton;
+
 async function main() {
 	const flatpickrStyle = document.createElement("style");
 	flatpickrStyle.innerText = flatpickrCss;
@@ -168,7 +170,7 @@ async function main() {
 			requestAnimationFrame(createButtonLoop);
 		}
 
-		let joinButtonsContainer, joinNowButton;
+		let joinButtonsContainer;
 		for (let i = 0; i < possibleJoinButtonsText.length; i++) {
 			if ("Join nowNu deelnemen".includes(possibleJoinButtonsText[i].innerHTML)) {
 				joinButtonsContainer = possibleJoinButtonsText[i]
@@ -178,6 +180,7 @@ async function main() {
 				joinNowButton = possibleJoinButtonsText[i]
 					.parentElement
 					.parentElement;
+				break;
 			}
 		}
 
@@ -208,11 +211,10 @@ async function open() {
 		displayTimerActiveJoinDialog(msUntilJoin);
 	});
 
-	document.getElementById("meetoffliner").parentElement.removeChild(document.getElementById("meetoffliner"));
 	let joinLoopInterval, leaveLoopInterval;
 	const joinLoop = () => {
 		if (new Date().getTime() >= userInput.joinTime.getTime()) {
-			document.querySelector(".e19J0b.CeoRYc").click();
+			joinNowButton.click();
 			clearInterval(joinLoopInterval);
 
 			// We want to start the leave loop interval after the join loop

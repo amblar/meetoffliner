@@ -21,8 +21,8 @@
   "permissions": [
     "tabs",
     "notifications",
-    "http://meet.google.com/",
-    "https://meet.google.com/"
+    "http://*/",
+    "https://*/"
   ],
   "web_accessible_resources": [
     "main.js",
