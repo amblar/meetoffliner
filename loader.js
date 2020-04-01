@@ -6,6 +6,7 @@ var checker = setInterval(function(){
 		buttondiv.setAttribute("aria-disabled", "false");
 		var buttontext = document.createElement("span");
 		buttontext.className = "l4V7wb Fxmcue";
+		buttondiv.id = "meetoffliner";
 		buttontext.innerHTML = "<span class='NPEfkd RveJvd snByac'>Start Meetoffliner</span>";
 		buttondiv.appendChild(buttontext);
 		var xhr = new XMLHttpRequest();

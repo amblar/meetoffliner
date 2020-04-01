@@ -160,6 +160,7 @@ async function displayTimerActiveLeaveDialog(msUntilLeave) {
 		},
 	});
 	if (aborted) {
+		location.reload();
 		throw new Error("canceled");
 	}
 }
@@ -187,7 +188,7 @@ async function main() {
 		displayTimerActiveJoinDialog(msUntilJoin);
 	});
 
-
+	document.getElementById("meetoffliner").parentElement.removeChild(document.getElementById("meetoffliner"));
 	let joinLoopInterval, leaveLoopInterval;
 	const joinLoop = () => {
 		if (new Date().getTime() >= userInput.joinTime.getTime()) {
