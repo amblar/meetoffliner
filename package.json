@@ -13,6 +13,7 @@
     "sweetalert2": "^9.10.8"
   },
   "devDependencies": {
+    "crx": "^5.0.1",
     "eslint": "^6.8.0",
     "uglify-js": "^3.8.1",
     "webpack": "^4.42.1",

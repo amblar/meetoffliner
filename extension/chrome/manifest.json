@@ -1,7 +1,7 @@
 {
   "name": "Meetoffliner",
   "description": "Meetoffliner",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "manifest_version": 2,
   "background": {
     "scripts": [
@@ -20,7 +20,6 @@
   },
   "permissions": [
     "tabs",
-    "notifications",
     "http://*/",
     "https://*/"
   ],

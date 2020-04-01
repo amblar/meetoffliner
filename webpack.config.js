@@ -2,8 +2,8 @@ const path = require("path");
 
 module.exports = {
 	entry: {
-		main: "./meetoffliner.js",
-		background: "./extension_background.js",
+		main: "./src/meetoffliner.js",
+		background: "./src/extension_background.js",
 	},
 	output: {
 		path: path.resolve(__dirname, "./extension/chrome/"),

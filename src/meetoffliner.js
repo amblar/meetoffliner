@@ -1,16 +1,11 @@
-import openPopup from "./open_popup";
+import start from "./start";
+import flatpickrCss from "./flatpickr_css";
 
 function findJoinBtn() {
 	// eslint-disable-next-line quotes
 	const possibleJoinBtns = document.querySelectorAll(`div > div[role="button"] > span > span`);
 	if (!possibleJoinBtns) {
 		return;
-	}
-
-	for (let i = 0; i < possibleJoinBtns.length; i++) {
-		if (possibleJoinBtns[i].innerHTML === "Meetoffliner") {
-			throw new Error("already active");
-		}
 	}
 
 	for (let i = 0; i < possibleJoinBtns.length; i++) {
@@ -29,7 +24,7 @@ function createMeetofflinerBtn(joinBtn, btnsContainer) {
 
 	meetofflinerBtn.childNodes[2].childNodes[0].innerHTML = "Meetoffliner";
 	btnsContainer.appendChild(meetofflinerBtn).addEventListener("click", () => {
-		openPopup(() => {
+		start(() => {
 			joinBtn.click();
 		});
 	});
@@ -40,6 +35,18 @@ function createMeetofflinerBtn(joinBtn, btnsContainer) {
 }
 
 async function main() {
+	// Check if flatpickr CSS already exists, this is used to indicate whether
+	// or not the script has already been injected on the page.
+	if (document.getElementById("flatpickr")) {
+		return;
+	}
+
+	// Add flatpickr CSS
+	const flatpickrStyle = document.createElement("style");
+	flatpickrStyle.innerText = flatpickrCss;
+	flatpickrStyle.setAttribute("id", "flatpickr");
+	document.head.appendChild(flatpickrStyle);
+
 	// Because we are dealing with an SPA, we need to wait until everyting has
 	// been loaded. This query is a good indicator of that.
 	const checkLoadedLoop = setInterval(() => {
@@ -63,7 +70,7 @@ async function main() {
 
 			createMeetofflinerBtn(joinBtn, btnsContainer);
 			clearInterval(initLoop);
-		}, 500);
+		}, 100);
 	});
 
 }

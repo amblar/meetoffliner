@@ -1,6 +1,5 @@
 import Swal from "sweetalert2";
 import flatpickr from "flatpickr";
-import flatpickrCss from "./flatpickr_css";
 
 function msToHrsMinsSecs(ms) {
 	let hrsMinsSecs = new Object();
@@ -32,8 +31,10 @@ async function displayUserInputDialog() {
 		cancelButtonText: "Annuleren",
 		html: `
 			<div>
-				<div style="text-align: left; margin-bottom: 12px; display: inline-b// Aborted is set to true to cancel active timers, as they are asynchronous.
-				let aborted = false;
+				<div style="text-align: left; margin-bottom: 12px; display: inline-block;">
+					<label style="color: #3a3d40; font-weight: 400; margin-bottom: 7px; font-size: 0.9em;">Tijd van deelname</label><br/>
+					<input style="color: #000000; font-weight: 300; font-family: 'Roboto'; padding: 6px 8px; border-radius: 4px; border: 1px solid #5f6368; font-size: 1em;" id="meetoffliner-jointime" />
+				</div>
 				<div style="text-align: left; margin-bottom: 12px; display: inline-block;">
 					<label style="color: #3a3d40; font-weight: 400; margin-bottom: 7px; font-size: 0.9em;">Tijd van verlaten</label><br/>
 					<input style="color: #000000; font-weight: 300; font-family: 'Roboto'; padding: 6px 8px; border-radius: 4px; border: 1px solid #5f6368; font-size: 1em;" id="meetoffliner-leavetime" />
@@ -90,7 +91,7 @@ async function displayTimerStartedDialog(untilJoin, betweenJoinLeave) {
 	});
 }
 
-async function displayTimerActiveJoinDialog(msUntilJoin, aborted) {
+async function displayTimerActiveJoinDialog(msUntilJoin, isAborted) {
 	await Swal.fire({
 		// eslint-disable-next-line quotes
 		html: `<span style="width: 10px; display: inline-block;"></span><span>Meetoffliner is actief, je neemt automatisch deel aan de call</span>`,
@@ -105,15 +106,15 @@ async function displayTimerActiveJoinDialog(msUntilJoin, aborted) {
 		allowEnterKey: false,
 		allowEscapeKey: false,
 		preConfirm: () => {
-			aborted = true;
+			isAborted[0] = true;
 		},
 	});
-	if (aborted) {
+	if (isAborted[0]) {
 		throw new Error("canceled");
 	}
 }
 
-async function displayTimerActiveLeaveDialog(msUntilLeave, aborted) {
+async function displayTimerActiveLeaveDialog(msUntilLeave, isAborted) {
 	await Swal.fire({
 		// eslint-disable-next-line quotes
 		html: `<span style="width: 10px; display: inline-block;"></span><span>Meetoffliner is actief, je verlaat automatisch de call</span>`,
@@ -128,21 +129,16 @@ async function displayTimerActiveLeaveDialog(msUntilLeave, aborted) {
 		allowEnterKey: false,
 		allowEscapeKey: false,
 		preConfirm: () => {
-			aborted = true;
+			isAborted[0] = true;
 		},
 	});
-	if (aborted) {
+	if (isAborted[0]) {
 		location.reload();
 		throw new Error("canceled");
 	}
 }
 
 export default async function (joinFunc) {
-	// Add flatpickr CSS
-	const flatpickrStyle = document.createElement("style");
-	flatpickrStyle.innerText = flatpickrCss;
-	document.head.appendChild(flatpickrStyle);
-
 	// Display popups and get user input.
 	await displayStartedDialog();
 	const userInput = await displayUserInputDialog();
@@ -156,7 +152,7 @@ export default async function (joinFunc) {
 	const untilJoin = msToHrsMinsSecs(msUntilJoin);
 	const betweenJoinLeave = msToHrsMinsSecs(msBetweenJoinLeave);
 
-	let isAborted = false;
+	let isAborted = [false]; // Array to make it a pointer.
 	let joinLoopInterval, leaveLoopInterval;
 	const joinLoop = () => {
 		if (new Date().getTime() >= userInput.joinTime.getTime()) {
@@ -169,7 +165,7 @@ export default async function (joinFunc) {
 			msUntilLeave = userInput.leaveTime.getTime() - new Date().getTime();
 			displayTimerActiveLeaveDialog(msUntilLeave, isAborted);
 		}
-		if (isAborted) {
+		if (isAborted[0]) {
 			clearInterval(joinLoopInterval);
 		}
 	};
@@ -177,7 +173,7 @@ export default async function (joinFunc) {
 		if (new Date().getTime() >= userInput.leaveTime.getTime()) {
 			window.location.replace("");
 		}
-		if (isAborted) {
+		if (isAborted[0]) {
 			clearInterval(leaveLoopInterval);
 		}
 	};
