@@ -1,11 +1,13 @@
 {
   "name": "Meetoffliner",
-  "description" : "Meetoffliner",
-  "version": "0.2",
+  "description": "Meetoffliner",
+  "version": "0.3.0",
   "manifest_version": 2,
   "background": {
-      "scripts": ["script.js"],
-      "persistent": false
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
   },
   "browser_action": {
     "default_icon": "img/Icon-128.png"
@@ -19,12 +21,11 @@
   "permissions": [
     "tabs",
     "notifications",
-    "http://*/",
-    "https://*/"
-    ],
+    "http://meet.google.com/",
+    "https://meet.google.com/"
+  ],
   "web_accessible_resources": [
-    "loader.js",
     "main.js",
     "img/Icon-128.png"
-    ]
+  ]
 }

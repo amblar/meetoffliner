@@ -1,6 +1,6 @@
 {
   "name": "meetoffliner",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "description": "Meetoffliner automatically joins a Google meet call and leaves again at the user-specified times.",
   "main": "meetoffliner.js",
   "scripts": {

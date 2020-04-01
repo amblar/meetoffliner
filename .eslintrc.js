@@ -8,6 +8,7 @@ module.exports = {
 	"globals": {
 		"Atomics": "readonly",
 		"SharedArrayBuffer": "readonly",
+		"chrome": true,
 	},
 	"parserOptions": {
 		"ecmaVersion": 2018,
@@ -34,5 +35,5 @@ module.exports = {
 			"error",
 			"always-multiline",
 		],
-	}
+	},
 };
